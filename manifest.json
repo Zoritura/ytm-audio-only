@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Music Audio Mode",
+  "version": "1.0.0",
+  "description": "Automatically switches YouTube Music to Song mode and hides video.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://music.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "YouTube Music Audio Mode",
+    "default_popup": "popup.html"
+  }
+}
