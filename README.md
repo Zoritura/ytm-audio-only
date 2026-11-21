@@ -5,10 +5,14 @@ A lightweight Manifest V3 extension for Chrome and Microsoft Edge. It helps keep
 ## Features
 
 - **Automatic Song mode:** Watches the player interface and switches from Video to Song mode when the option is available.
-- **Video hiding:** Hides video elements and the player video container without pausing playback.
-- **Artwork controls:** Hides the large now-playing artwork panel in audio-only mode while keeping the mini-player thumbnail visible.
+- **Video hiding:** Hides video elements where YouTube Music's page structure allows, without pausing playback.
+- **Artwork controls:** Attempts to hide the large now-playing artwork while leaving the mini-player thumbnail visible.
 - **Popup toggle:** Enable or disable audio-only mode from the browser toolbar. Your preference is saved locally and is enabled by default.
 - **Local operation:** The extension makes no external network requests and does not include tracking.
+
+## Limitations
+
+YouTube Music can keep the large player area or a gray placeholder visible after its video or artwork is hidden. The site's layout is controlled by YouTube Music, and removing that area reliably could interfere with playback, so the extension does not guarantee that the entire panel will disappear.
 
 ## Install as an unpacked extension
 
