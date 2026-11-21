@@ -1,8 +1,10 @@
 (() => {
   const STORAGE_KEY = "autoAudioEnabled";
   const ENABLED_ATTRIBUTE = "data-auto-audio-mode";
-  const HIDDEN_ELEMENTS_SELECTOR = "video, #song-video, #song-video-container";
-  const HIDDEN_PROPERTIES = ["opacity", "visibility", "pointer-events"];
+  const PLAYER_ART_SELECTOR = "#song-image, #song-image-container";
+  const HIDDEN_ELEMENTS_SELECTOR =
+    `video, #song-video, #song-video-container, ${PLAYER_ART_SELECTOR}`;
+  const HIDDEN_PROPERTIES = ["display", "opacity", "visibility", "pointer-events"];
   const ACTION_PATTERN =
     /\b(?:switch|change|set|listen)\s+(?:to\s+)?song\b|\bsong\s+mode\b|\baudio\s+only\b/i;
   const VIDEO_PATTERN = /\bvideo\b/i;
@@ -73,6 +75,13 @@
       element.style.getPropertyPriority("pointer-events") !== "important"
     ) {
       element.style.setProperty("pointer-events", "none", "important");
+    }
+    if (
+      element.matches(PLAYER_ART_SELECTOR) &&
+      (element.style.getPropertyValue("display") !== "none" ||
+        element.style.getPropertyPriority("display") !== "important")
+    ) {
+      element.style.setProperty("display", "none", "important");
     }
   }
 

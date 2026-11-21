@@ -11,6 +11,11 @@ html[data-auto-audio-mode="true"] #song-video-container {
   pointer-events: none !important;
 }
 
+html[data-auto-audio-mode="true"] #song-image,
+html[data-auto-audio-mode="true"] #song-image-container {
+  display: none !important;
+}
+
 html[data-auto-audio-mode="true"] #song-video video,
 html[data-auto-audio-mode="true"] ytmusic-player video {
   opacity: 0 !important;
