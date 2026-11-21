@@ -4,16 +4,15 @@ html[data-auto-audio-mode="true"] video {
   pointer-events: none !important;
 }
 
+html[data-auto-audio-mode="true"] ytmusic-player-video,
 html[data-auto-audio-mode="true"] #song-video,
-html[data-auto-audio-mode="true"] #song-video-container {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
+html[data-auto-audio-mode="true"] #song-video-container,
 html[data-auto-audio-mode="true"] #song-image,
 html[data-auto-audio-mode="true"] #song-image-container {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 html[data-auto-audio-mode="true"] #song-video video,

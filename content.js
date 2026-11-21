@@ -3,7 +3,9 @@
   const ENABLED_ATTRIBUTE = "data-auto-audio-mode";
   const PLAYER_ART_SELECTOR = "#song-image, #song-image-container";
   const HIDDEN_ELEMENTS_SELECTOR =
-    `video, #song-video, #song-video-container, ${PLAYER_ART_SELECTOR}`;
+    `video, ytmusic-player-video, #song-video, #song-video-container, ${PLAYER_ART_SELECTOR}`;
+  const HIDDEN_CONTAINERS_SELECTOR =
+    `ytmusic-player-video, #song-video, #song-video-container, ${PLAYER_ART_SELECTOR}`;
   const HIDDEN_PROPERTIES = ["display", "opacity", "visibility", "pointer-events"];
   const ACTION_PATTERN =
     /\b(?:switch|change|set|listen)\s+(?:to\s+)?song\b|\bsong\s+mode\b|\baudio\s+only\b/i;
@@ -77,7 +79,7 @@
       element.style.setProperty("pointer-events", "none", "important");
     }
     if (
-      element.matches(PLAYER_ART_SELECTOR) &&
+      element.matches(HIDDEN_CONTAINERS_SELECTOR) &&
       (element.style.getPropertyValue("display") !== "none" ||
         element.style.getPropertyPriority("display") !== "important")
     ) {
