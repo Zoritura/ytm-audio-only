@@ -5,35 +5,249 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>YouTube Music Audio Mode</title>
     <style>
-      body {
-        min-width: 220px;
-        margin: 0;
-        padding: 16px;
-        color: #202124;
-        font: 14px/1.4 Arial, sans-serif;
+      :root {
+        color-scheme: dark;
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        background: #101010;
+        color: #f5f2f2;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      label {
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 330px;
+        margin: 0;
+        padding: 20px;
+        background:
+          radial-gradient(ellipse at 85% 0%, rgb(255 0 70 / 16%), transparent 48%),
+          #101010;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .brand-icon {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid rgb(255 255 255 / 9%);
+        border-radius: 14px;
+        background: linear-gradient(145deg, #ff3d68, #d50035);
+        box-shadow: 0 7px 22px rgb(213 0 53 / 24%);
+      }
+
+      .brand-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .eyebrow {
+        margin: 0 0 3px;
+        color: #ff718d;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 650;
+        letter-spacing: -0.02em;
+      }
+
+      .setting-card {
+        padding: 16px;
+        border: 1px solid #2b292a;
+        border-radius: 16px;
+        background: rgb(32 30 31 / 88%);
+      }
+
+      .setting-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 18px;
       }
 
-      #status {
-        min-height: 1.4em;
-        margin: 12px 0 0;
-        color: #5f6368;
+      .setting-copy {
+        min-width: 0;
+      }
+
+      .setting-title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 650;
+      }
+
+      .setting-description {
+        margin: 5px 0 0;
+        color: #aaa5a6;
         font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-flex;
+        width: 46px;
+        height: 27px;
+        flex: 0 0 auto;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .switch input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+      }
+
+      .switch-track {
+        position: absolute;
+        inset: 0;
+        border: 1px solid #5b5658;
+        border-radius: 999px;
+        background: #393536;
+        transition: background 160ms ease, border-color 160ms ease;
+      }
+
+      .switch-track::after {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        background: #e5e0e1;
+        content: "";
+        transition: transform 160ms ease, background 160ms ease;
+      }
+
+      .switch input:checked + .switch-track {
+        border-color: #ff365e;
+        background: #d9143d;
+      }
+
+      .switch input:checked + .switch-track::after {
+        background: #fff;
+        transform: translateX(19px);
+      }
+
+      .switch input:focus-visible + .switch-track {
+        outline: 2px solid #ff8aa0;
+        outline-offset: 3px;
+      }
+
+      .switch input:disabled + .switch-track {
+        cursor: wait;
+        opacity: 0.55;
+      }
+
+      .divider {
+        height: 1px;
+        margin: 15px 0 12px;
+        border: 0;
+        background: #393536;
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 18px;
+        margin: 0;
+        color: #aaa5a6;
+        font-size: 11px;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: #888184;
+      }
+
+      .status[data-state="enabled"] {
+        color: #f0c4cd;
+      }
+
+      .status[data-state="enabled"] .status-dot {
+        background: #ff456b;
+        box-shadow: 0 0 9px rgb(255 69 107 / 55%);
+      }
+
+      .status[data-state="error"] {
+        color: #ff9a9a;
+      }
+
+      .status[data-state="error"] .status-dot {
+        background: #ff7777;
+      }
+
+      .footer {
+        margin: 14px 0 0;
+        color: #777274;
+        font-size: 10px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
-    <label for="enabled">
-      <span>Automatic audio mode</span>
-      <input id="enabled" type="checkbox" disabled>
-    </label>
-    <p id="status" role="status" aria-live="polite"></p>
+    <header class="header">
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M9 18V5l12-2v13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="18" r="3" fill="white"/>
+          <circle cx="18" cy="16" r="3" fill="white"/>
+          <path d="M3 9c1.7-1.6 4.3-1.6 6 0" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+        </svg>
+      </div>
+      <div>
+        <p class="eyebrow">YouTube Music</p>
+        <h1>Audio-only mode</h1>
+      </div>
+    </header>
+
+    <main>
+      <section class="setting-card" aria-labelledby="setting-title">
+        <div class="setting-row">
+          <div class="setting-copy">
+            <h2 class="setting-title" id="setting-title">Automatic audio mode</h2>
+            <p class="setting-description">Prefer songs and keep music videos out of view.</p>
+          </div>
+          <label class="switch" aria-label="Enable automatic audio mode">
+            <input id="enabled" type="checkbox" role="switch" aria-describedby="status" disabled>
+            <span class="switch-track" aria-hidden="true"></span>
+          </label>
+        </div>
+        <hr class="divider">
+        <p class="status" id="status" data-state="loading" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="status-text">Loading your preference…</span>
+        </p>
+      </section>
+    </main>
+
+    <p class="footer">Your preference is saved on this device.</p>
     <script src="popup.js"></script>
   </body>
 </html>

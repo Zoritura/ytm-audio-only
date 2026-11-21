@@ -2,27 +2,41 @@
   const STORAGE_KEY = "autoAudioEnabled";
   const toggle = document.getElementById("enabled");
   const status = document.getElementById("status");
+  const statusText = document.getElementById("status-text");
+
+  function setStatus(state, message) {
+    status.dataset.state = state;
+    statusText.textContent = message;
+  }
 
   chrome.storage.local.get({ [STORAGE_KEY]: true }, (result) => {
     if (chrome.runtime.lastError) {
-      status.textContent = `Unable to load setting: ${chrome.runtime.lastError.message}`;
+      setStatus("error", `Unable to load setting: ${chrome.runtime.lastError.message}`);
       return;
     }
 
     toggle.checked = result[STORAGE_KEY] !== false;
     toggle.disabled = false;
+    setStatus(
+      toggle.checked ? "enabled" : "disabled",
+      toggle.checked ? "Audio-only mode is active" : "Audio-only mode is paused"
+    );
   });
 
   toggle.addEventListener("change", () => {
+    const previousValue = !toggle.checked;
     toggle.disabled = true;
-    status.textContent = "Saving…";
+    setStatus("saving", "Saving your preference…");
 
     chrome.storage.local.set({ [STORAGE_KEY]: toggle.checked }, () => {
       if (chrome.runtime.lastError) {
-        status.textContent = `Unable to save setting: ${chrome.runtime.lastError.message}`;
-        toggle.checked = !toggle.checked;
+        toggle.checked = previousValue;
+        setStatus("error", `Unable to save setting: ${chrome.runtime.lastError.message}`);
       } else {
-        status.textContent = toggle.checked ? "Audio mode enabled." : "Audio mode disabled.";
+        setStatus(
+          toggle.checked ? "enabled" : "disabled",
+          toggle.checked ? "Audio-only mode is active" : "Audio-only mode is paused"
+        );
       }
       toggle.disabled = false;
     });
